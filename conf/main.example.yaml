@@ -1,0 +1,14 @@
+game_version:
+  - '1.18.1'
+  - '1.18'
+modloader: Fabric
+modlist_path: D:\Games\Minecraft\.minecraft\mods.txt
+mods_path: D:\Games\Minecraft\.minecraft\mods
+webdriver_path: C:\Libraries\WebDriver\chromedriver.exe
+api:
+  curseforge:
+    api_endpoint: https://addons-ecs.forgesvc.net/api/v2
+    api_key: 'YOUR_CURSEFORGE_API_KEY_HERE'
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36
+  modrinth:
+    api_endpoint: https://api.modrinth.com/api/v1
