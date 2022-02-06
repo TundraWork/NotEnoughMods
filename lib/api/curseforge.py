@@ -44,6 +44,7 @@ class CurseForge:
         data = self.api_request(url)
         if data is None:
             print(f'(!) Failed to get mod id.')
+            return False
         for mod in data:
             if mod['slug'] == slug:
                 return mod['id']
@@ -61,7 +62,7 @@ class CurseForge:
         url = f'/addon/{mod_id}/files'
         data = self.api_request(url)
         if data is None:
-            print(f'(!) Failed to get file id.')
+            return False
         filtered = list()
         for game_version in self.game_version:
             for file in data:
@@ -82,8 +83,7 @@ class CurseForge:
         url = f'/addon/{mod_id}/file/{file_id}/download-url'
         data = self.api_request(url)
         if data is None:
-            print(f'(!) Failed to get file url.')
-            return None
+            return False
         return data
 
     def download_from_url(self, url):
@@ -109,6 +109,9 @@ class CurseForge:
                     mod_id = int(mod_id)
             cache['curseforge'][slug]['mod_id'] = mod_id
         file_id = self.get_file_id(mod_id)
+        if not file_id:
+            print(f'(!) Failed to get file id.')
+            return False
         upgrade = False
         if 'file_id' in cache['curseforge'][slug]:
             upgrade = True
@@ -116,7 +119,7 @@ class CurseForge:
                 print(f'Mod {slug} is already up to date.')
                 return True
         url = self.get_file_url(mod_id, file_id)
-        if url is None:
+        if not url:
             print('(!) Failed to get file url.')
             return False
         self.modfile.download(url, 'curseforge', mod_id, file_id, slug)
