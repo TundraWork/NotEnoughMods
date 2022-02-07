@@ -90,7 +90,7 @@ class CurseForge:
         print(f'Processing CurseForge entry: {url}')
         if 'www.curseforge.com/minecraft/mc-mods' not in url:
             print('Invalid URL for CurseForge Minecraft mods!')
-            return False
+            return False, 'Invalid URL for CurseForge Minecraft mods!'
         slug = url.split('/')[-1]
         cache = self.cache.read()
         if slug in cache['curseforge']:
@@ -104,14 +104,14 @@ class CurseForge:
                 mod_id = self.get_mod_id_by_crawler(slug)
                 if not mod_id:
                     print('Invalid mod slug!')
-                    return False
+                    return False, 'Invalid mod slug!'
                 else:
                     mod_id = int(mod_id)
             cache['curseforge'][slug]['mod_id'] = mod_id
         file_id = self.get_file_id(mod_id)
         if not file_id:
             print(f'(!) Failed to get file id.')
-            return False
+            return False, 'Failed to get file id.'
         upgrade = False
         if 'file_id' in cache['curseforge'][slug]:
             upgrade = True
@@ -121,7 +121,7 @@ class CurseForge:
         url = self.get_file_url(mod_id, file_id)
         if not url:
             print('(!) Failed to get file url.')
-            return False
+            return False, 'Failed to get file url.'
         self.modfile.download(url, 'curseforge', mod_id, file_id, slug)
         if upgrade:
             self.modfile.delete('curseforge', mod_id, cache['curseforge'][slug]['file_id'], slug)

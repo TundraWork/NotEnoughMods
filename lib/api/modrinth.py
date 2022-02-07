@@ -81,7 +81,7 @@ class Modrinth:
         print(f'Processing Modrinth entry: {url}')
         if 'modrinth.com/mod' not in url:
             print('Invalid URL for Modrinth mods!')
-            return False
+            return False, 'Invalid URL for Modrinth mods!'
         slug = url.split('/')[-1]
         cache = self.cache.read()
         if slug in cache['modrinth']:
@@ -95,7 +95,7 @@ class Modrinth:
                 mod_id = self.get_mod_id_by_crawler(slug)
                 if not mod_id:
                     print('Invalid mod slug!')
-                    return False
+                    return False, 'Invalid mod slug!'
             cache['modrinth'][slug]['mod_id'] = mod_id
         version = self.get_version(mod_id)
         upgrade = False
@@ -104,9 +104,9 @@ class Modrinth:
             if version[0] == cache['modrinth'][slug]['version_id']:
                 print(f'Mod {slug} is already up to date.')
                 return True
-        if version[1] is None:
+        if not version:
             print('(!) Failed to get file url.')
-            return False
+            return False, 'Failed to get file url.'
         self.modfile.download(version[1], 'modrinth', mod_id, version[0], slug)
         if upgrade:
             self.modfile.delete('modrinth', mod_id, cache['modrinth'][slug]['version_id'], slug)
