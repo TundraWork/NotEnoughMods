@@ -103,7 +103,7 @@ class Modrinth:
             upgrade = True
             if version[0] == cache['modrinth'][slug]['version_id']:
                 print(f'Mod {slug} is already up to date.')
-                return True
+                return True, False
         if not version:
             print('(!) Failed to get file url.')
             return False, 'Failed to get file url.'
@@ -113,4 +113,4 @@ class Modrinth:
         cache['modrinth'][slug]['version_id'] = version[0]
         self.cache.write(cache)
         print(f'Successfully updated {slug} from Modrinth!')
-        return True
+        return True, True
