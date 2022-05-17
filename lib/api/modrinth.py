@@ -33,7 +33,7 @@ class Modrinth:
             return None
 
     def get_mod_id_by_search(self, slug):
-        url = '/mod?query={}&filters={}&versions={}'.format(
+        url = 'mod?query={}&filters={}&versions={}'.format(
             slug,
             urllib.parse.quote(f'categories="{self.modloader}"'),
             urllib.parse.quote('version="'+'" OR version="'.join(self.game_version)+'"')
@@ -56,7 +56,7 @@ class Modrinth:
         return mod_id
 
     def get_version(self, mod_id):
-        url = f'/mod/{mod_id}/version'
+        url = f'mod/{mod_id}/version'
         data = self.api_request(url)
         if data is None:
             print(f'(!) Failed to get file id.')
@@ -72,8 +72,8 @@ class Modrinth:
             return False
         latest_version = filtered[0]
         for version in filtered:
-            if datetime.datetime.strptime(version['date_published'], '%Y-%m-%dT%H:%M:%S.%fZ')\
-                    > datetime.datetime.strptime(latest_version['date_published'], '%Y-%m-%dT%H:%M:%S.%fZ'):
+            if datetime.datetime.strptime(version['date_published'], '%Y-%m-%dT%H:%M:%S%z')\
+                    > datetime.datetime.strptime(latest_version['date_published'], '%Y-%m-%dT%H:%M:%S%z'):
                 latest_version = version
         return latest_version['id'], latest_version['files'][0]['url']
 

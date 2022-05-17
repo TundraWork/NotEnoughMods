@@ -35,17 +35,21 @@ class CurseForge:
         }
         response = requests.get(path, headers=headers)
         if response.status_code == 200:
-            return response.json()
+            try:
+                data = response.json()
+            except BaseException:
+                data = response.content
+            return data
         else:
             return None
 
     def get_mod_id_by_search(self, slug):
-        url = f'/addon/search?gameId=432&sectionId=6&searchFilter={slug}'
+        url = f'search?gameId=432&sectionId=6&slug={slug}'
         data = self.api_request(url)
         if data is None:
             print(f'(!) Failed to get mod id.')
             return False
-        for mod in data:
+        for mod in data['data']:
             if mod['slug'] == slug:
                 return mod['id']
         return False
@@ -59,14 +63,14 @@ class CurseForge:
         return mod_id
 
     def get_file_id(self, mod_id):
-        url = f'/addon/{mod_id}/files'
+        url = f'{mod_id}/files'
         data = self.api_request(url)
         if data is None:
             return False
         filtered = list()
         for game_version in self.game_version:
-            for file in data:
-                if game_version in file['gameVersion'] and self.modloader in file['gameVersion']:
+            for file in data['data']:
+                if game_version in file['gameVersions'] and self.modloader in file['gameVersions']:
                     filtered.append(file)
             if len(filtered) != 0:
                 break
@@ -80,11 +84,11 @@ class CurseForge:
         return latest_file['id']
 
     def get_file_url(self, mod_id, file_id):
-        url = f'/addon/{mod_id}/file/{file_id}/download-url'
+        url = f'{mod_id}/files/{file_id}/download-url'
         data = self.api_request(url)
         if data is None:
             return False
-        return data
+        return data['data']
 
     def download_from_url(self, url):
         print(f'Processing CurseForge entry: {url}')
