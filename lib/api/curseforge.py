@@ -44,7 +44,7 @@ class CurseForge:
             return None
 
     def get_mod_id_by_search(self, slug):
-        url = f'search?gameId=432&sectionId=6&slug={slug}'
+        url = f'search?gameId=432&classId=6&slug={slug}'
         data = self.api_request(url)
         if data is None:
             print(f'(!) Failed to get mod id.')
