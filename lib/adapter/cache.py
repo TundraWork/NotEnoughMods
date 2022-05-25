@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class Cache:
@@ -8,10 +9,10 @@ class Cache:
     }
 
     def __init__(self):
-        with open('conf/cache.json', 'r') as cache_file:
+        with open('conf/cache.json', 'a+') as cache_file:
+            cache_file.seek(0)
             try:
                 self.cache = json.load(cache_file)
-                test = 1
             except json.decoder.JSONDecodeError:
                 pass
 
