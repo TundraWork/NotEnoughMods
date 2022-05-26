@@ -127,7 +127,7 @@ class CurseForge:
             upgrade = True
             if file_id <= cache['curseforge'][slug]['file_id']:
                 print(f'Mod {slug} is already up to date.')
-                return True, False, file_info[2]
+                return True, 0, file_info[2]
         url = self.get_file_url(file_id, file_name)
         if not url:
             print('(!) Failed to get file url.')
@@ -138,4 +138,7 @@ class CurseForge:
         cache['curseforge'][slug]['file_id'] = file_id
         self.cache.write(cache)
         print(f'Successfully updated {slug} from CurseForge!')
-        return True, True, file_info[2]
+        if not upgrade:
+            return True, 1, file_info[2]
+        else:
+            return True, 2, file_info[2]
