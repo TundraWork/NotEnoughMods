@@ -19,6 +19,7 @@ class CurseForge:
         self.game_version = config['game_version']
         self.modloader = config['modloader']
         self.api_endpoint = config['api']['curseforge']['api_endpoint']
+        self.cdn_endpoint = config['api']['curseforge']['cdn_endpoint']
         self.api_key = config['api']['curseforge']['api_key']
         self.user_agent = config['api']['curseforge']['user_agent']
         self.cache = Cache()
@@ -81,14 +82,13 @@ class CurseForge:
         for file in filtered:
             if file['id'] > latest_file['id']:
                 latest_file = file
-        return latest_file['id']
+        return latest_file['id'], latest_file['fileName']
 
-    def get_file_url(self, mod_id, file_id):
-        url = f'{mod_id}/files/{file_id}/download-url'
-        data = self.api_request(url)
-        if data is None:
-            return False
-        return data['data']
+    def get_file_url(self, file_id, file_name):
+        first_part = str(file_id)[0:4]
+        second_part = str(file_id)[4:7]
+        url = f'{self.cdn_endpoint}files/{first_part}/{second_part}/{file_name}'
+        return url
 
     def download_from_url(self, url):
         print(f'Processing CurseForge entry: {url}')
@@ -112,17 +112,19 @@ class CurseForge:
                 else:
                     mod_id = int(mod_id)
             cache['curseforge'][slug]['mod_id'] = mod_id
-        file_id = self.get_file_id(mod_id)
-        if not file_id:
+        file_info = self.get_file_id(mod_id)
+        if not file_info:
             print(f'(!) Failed to get file id.')
             return False, 'Failed to get file id.'
+        file_id = file_info[0]
+        file_name = file_info[1]
         upgrade = False
         if 'file_id' in cache['curseforge'][slug]:
             upgrade = True
             if file_id <= cache['curseforge'][slug]['file_id']:
                 print(f'Mod {slug} is already up to date.')
                 return True, False
-        url = self.get_file_url(mod_id, file_id)
+        url = self.get_file_url(file_id, file_name)
         if not url:
             print('(!) Failed to get file url.')
             return False, 'Failed to get file url.'
