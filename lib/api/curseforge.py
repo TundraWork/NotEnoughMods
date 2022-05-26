@@ -63,7 +63,7 @@ class CurseForge:
             )
         return mod_id
 
-    def get_file_id(self, mod_id):
+    def get_file_info(self, mod_id):
         url = f'{mod_id}/files'
         data = self.api_request(url)
         if data is None:
@@ -82,7 +82,11 @@ class CurseForge:
         for file in filtered:
             if file['id'] > latest_file['id']:
                 latest_file = file
-        return latest_file['id'], latest_file['fileName']
+        dependencies = list()
+        for dependency in latest_file['dependencies']:
+            if dependency['relationType'] == 3:
+                dependencies.append(dependency['modId'])
+        return latest_file['id'], latest_file['fileName'], dependencies
 
     def get_file_url(self, file_id, file_name):
         first_part = str(file_id)[0:4]
@@ -112,7 +116,7 @@ class CurseForge:
                 else:
                     mod_id = int(mod_id)
             cache['curseforge'][slug]['mod_id'] = mod_id
-        file_info = self.get_file_id(mod_id)
+        file_info = self.get_file_info(mod_id)
         if not file_info:
             print(f'(!) Failed to get file id.')
             return False, 'Failed to get file id.'
@@ -123,7 +127,7 @@ class CurseForge:
             upgrade = True
             if file_id <= cache['curseforge'][slug]['file_id']:
                 print(f'Mod {slug} is already up to date.')
-                return True, False
+                return True, False, file_info[2]
         url = self.get_file_url(file_id, file_name)
         if not url:
             print('(!) Failed to get file url.')
@@ -134,4 +138,4 @@ class CurseForge:
         cache['curseforge'][slug]['file_id'] = file_id
         self.cache.write(cache)
         print(f'Successfully updated {slug} from CurseForge!')
-        return True, True
+        return True, True, file_info[2]
