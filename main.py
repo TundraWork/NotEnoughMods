@@ -42,9 +42,9 @@ for mod in mods:
 
 print('Done!')
 if len(new_mods) == 1:
-    print(f'Added {len(upgraded)} new mod:')
+    print(f'Added {len(new_mods)} new mod:')
 elif len(new_mods) > 1:
-    print(f'Added {len(upgraded)} new mods:')
+    print(f'Added {len(new_mods)} new mods:')
 else:
     print('No new mods added')
 for new_mod in new_mods:
