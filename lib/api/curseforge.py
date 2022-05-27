@@ -89,8 +89,8 @@ class CurseForge:
         return latest_file['id'], latest_file['fileName'], dependencies
 
     def get_file_url(self, file_id, file_name):
-        first_part = str(file_id)[0:4]
-        second_part = str(file_id)[4:7]
+        first_part = str(file_id)[:4]
+        second_part = str(file_id)[4:]
         url = f'{self.cdn_endpoint}files/{first_part}/{second_part}/{file_name}'
         return url
 
