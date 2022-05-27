@@ -12,10 +12,12 @@ if mods is None:
 crawler = Crawler()  # hold crawler instance to avoid repeatedly open and close chrome
 curseforge = CurseForge(crawler)
 modrinth = Modrinth(crawler)
+cache = Cache().read()
 failed = []
 new_mods = []
 upgraded = []
-dependencies = {}
+curseforge_mods = []
+dependency_list = {}
 missing_dependency_list = {}
 for mod in mods:
     if mod[0] == 'curseforge':
@@ -31,7 +33,7 @@ for mod in mods:
             elif result[1] == 2:
                 upgraded.append(mod[1])
             if result[2]:
-                dependencies[mod[1].split('/')[-1]] = result[2]
+                dependency_list[slug] = result[2]
 
     elif mod[0] == 'modrinth':
         result = modrinth.download_from_url(mod[1])
@@ -78,11 +80,11 @@ for mod, dependencies in dependency_list.items():
             missing_dependencies.append(dependency)
     if len(missing_dependencies):
         missing_dependency_list[mod] = missing_dependencies
-for dependency in dependencies_cleared:
-    if len(dependencies_cleared[dependency]) == 1:
+for dependency in missing_dependency_list:
+    if len(missing_dependency_list[dependency]) == 1:
         print(f'(!){dependency} has the following dependency but is not in the mod list:')
-    elif len(dependencies_cleared[dependency]) > 1:
+    elif len(missing_dependency_list[dependency]) > 1:
         print(f'(!){dependency} has the following dependencies but are not in the mod list:')
-    for dependency_mod_id in dependencies_cleared[dependency]:
+    for dependency_mod_id in missing_dependency_list[dependency]:
         print(dependency_mod_id)
 exit(0)
