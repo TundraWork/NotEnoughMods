@@ -16,10 +16,13 @@ failed = []
 new_mods = []
 upgraded = []
 dependencies = {}
-dependencies_cleared = {}
+missing_dependency_list = {}
 for mod in mods:
     if mod[0] == 'curseforge':
         result = curseforge.download_from_url(mod[1])
+        slug = mod[1].split('/')[-1]
+        if slug in cache['curseforge']:
+            curseforge_mods.append(cache['curseforge'][slug]['mod_id'])
         if result[0] is not True:
             failed.append((mod[1], result[1]))
         else:
@@ -68,17 +71,13 @@ else:
 for failed_entity in failed:
     print(failed_entity[0] + ' : ' + failed_entity[1])
 
-cache = Cache().read()
-all_ids = []
-for mod in cache['curseforge']:
-    all_ids.append(cache['curseforge'][mod]['mod_id'])
-for dependency in dependencies:
-    tmp = []
-    for dependency_mod_id in dependencies[dependency]:
-        if dependency_mod_id not in all_ids:
-            tmp.append(dependency_mod_id)
-    if len(tmp) > 0:
-        dependencies_cleared[dependency] = tmp
+for mod, dependencies in dependency_list.items():
+    missing_dependencies = []
+    for dependency in dependencies:
+        if dependency not in curseforge_mods:
+            missing_dependencies.append(dependency)
+    if len(missing_dependencies):
+        missing_dependency_list[mod] = missing_dependencies
 for dependency in dependencies_cleared:
     if len(dependencies_cleared[dependency]) == 1:
         print(f'(!){dependency} has the following dependency but is not in the mod list:')
