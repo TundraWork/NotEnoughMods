@@ -60,9 +60,9 @@ for upgraded_entity in upgraded:
     print(upgraded_entity)
 
 if len(failed) == 1:
-    print(f'\033[91m{len(failed)} entity failed:\033[0m')
+    print(f'{len(failed)} entity failed:')
 elif len(failed) > 1:
-    print(f'\033[91m{len(failed)} entities failed:\033[0m')
+    print(f'{len(failed)} entities failed:')
 else:
     print('No failed entities.')
 for failed_entity in failed:
@@ -81,9 +81,9 @@ for dependency in dependencies:
         dependencies_cleared[dependency] = tmp
 for dependency in dependencies_cleared:
     if len(dependencies_cleared[dependency]) == 1:
-        print(f'\033[95m (!){dependency} has the following dependency but is not in the mod list:\033[0m')
+        print(f'(!){dependency} has the following dependency but is not in the mod list:')
     elif len(dependencies_cleared[dependency]) > 1:
-        print(f'\033[95m (!){dependency} has the following dependencies but are not in the mod list:\033[0m')
+        print(f'(!){dependency} has the following dependencies but are not in the mod list:')
     for dependency_mod_id in dependencies_cleared[dependency]:
         print(dependency_mod_id)
 exit(0)
