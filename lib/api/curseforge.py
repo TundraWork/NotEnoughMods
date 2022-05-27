@@ -118,8 +118,8 @@ class CurseForge:
             cache['curseforge'][slug]['mod_id'] = mod_id
         file_info = self.get_file_info(mod_id)
         if not file_info:
-            print(f'(!) Failed to get file id.')
-            return False, 'Failed to get file id.'
+            print(f'(!) Failed to get file info.')
+            return False, 'Failed to get file info.'
         file_id = file_info[0]
         file_name = file_info[1]
         upgrade = False
