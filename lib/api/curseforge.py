@@ -1,6 +1,7 @@
-import os, requests
-from lib.adapter.config import Config
+import requests
+
 from lib.adapter.cache import Cache
+from lib.adapter.config import Config
 from lib.adapter.modfile import ModFile
 
 
@@ -19,6 +20,7 @@ class CurseForge:
         self.game_version = config['game_version']
         self.modloader = config['modloader']
         self.api_endpoint = config['api']['curseforge']['api_endpoint']
+        self.cdn_endpoint = config['api']['curseforge']['cdn_endpoint']
         self.api_key = config['api']['curseforge']['api_key']
         self.user_agent = config['api']['curseforge']['user_agent']
         self.cache = Cache()
@@ -59,10 +61,10 @@ class CurseForge:
             f'https://www.curseforge.com/minecraft/mc-mods/{slug}',
             self.crawler.selectors.XPATH,
             '/html/body/div[1]/main/div[1]/div[2]/section/aside/div[2]/div/div[1]/div[2]/div[1]/span[2]'
-            )
+        )
         return mod_id
 
-    def get_file_id(self, mod_id):
+    def get_file_info(self, mod_id):
         url = f'{mod_id}/files'
         data = self.api_request(url)
         if data is None:
@@ -81,14 +83,17 @@ class CurseForge:
         for file in filtered:
             if file['id'] > latest_file['id']:
                 latest_file = file
-        return latest_file['id']
+        dependencies = list()
+        for dependency in latest_file['dependencies']:
+            if dependency['relationType'] == 3:
+                dependencies.append(dependency['modId'])
+        return latest_file['id'], latest_file['fileName'], dependencies
 
-    def get_file_url(self, mod_id, file_id):
-        url = f'{mod_id}/files/{file_id}/download-url'
-        data = self.api_request(url)
-        if data is None:
-            return False
-        return data['data']
+    def get_file_url(self, file_id, file_name):
+        first_part = str(file_id)[:4]
+        second_part = str(file_id)[4:]
+        url = f'{self.cdn_endpoint}files/{first_part}/{second_part}/{file_name}'
+        return url
 
     def download_from_url(self, url):
         print(f'Processing CurseForge entry: {url}')
@@ -112,17 +117,19 @@ class CurseForge:
                 else:
                     mod_id = int(mod_id)
             cache['curseforge'][slug]['mod_id'] = mod_id
-        file_id = self.get_file_id(mod_id)
-        if not file_id:
-            print(f'(!) Failed to get file id.')
-            return False, 'Failed to get file id.'
+        file_info = self.get_file_info(mod_id)
+        if not file_info:
+            print(f'(!) Failed to get file info.')
+            return False, 'Failed to get file info.'
+        file_id = file_info[0]
+        file_name = file_info[1]
         upgrade = False
         if 'file_id' in cache['curseforge'][slug]:
             upgrade = True
             if file_id <= cache['curseforge'][slug]['file_id']:
                 print(f'Mod {slug} is already up to date.')
-                return True, False
-        url = self.get_file_url(mod_id, file_id)
+                return True, 0, file_info[2]
+        url = self.get_file_url(file_id, file_name)
         if not url:
             print('(!) Failed to get file url.')
             return False, 'Failed to get file url.'
@@ -132,4 +139,7 @@ class CurseForge:
         cache['curseforge'][slug]['file_id'] = file_id
         self.cache.write(cache)
         print(f'Successfully updated {slug} from CurseForge!')
-        return True, True
+        if not upgrade:
+            return True, 1, file_info[2]
+        else:
+            return True, 2, file_info[2]

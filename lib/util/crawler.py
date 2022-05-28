@@ -1,4 +1,5 @@
 from selenium import webdriver
+
 from lib.adapter.config import Config
 
 
@@ -15,6 +16,7 @@ class Crawler:
             options = webdriver.ChromeOptions()
             options.add_argument("--enable-experimental-web-platform-features")
             self._webdriver_instance = webdriver.Chrome(self._webdriver_path, options=options)
+            self._webdriver_instance.minimize_window()
 
     def __del__(self):
         if self._webdriver_instance is not None:
