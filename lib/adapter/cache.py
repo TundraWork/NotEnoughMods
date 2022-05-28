@@ -8,9 +8,9 @@ class Cache:
     }
     type = None
 
-    def __init__(self, config):
-        self.type = config['type']
-        with open(f'conf/cache.{self.type}.json', 'a+') as cache_file:
+    def __init__(self, _type):
+        self.type = _type
+        with open(f'conf/cache.{_type}.json', 'a+') as cache_file:
             cache_file.seek(0)
             try:
                 self.cache = json.load(cache_file)

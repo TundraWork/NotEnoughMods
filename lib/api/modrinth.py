@@ -18,7 +18,7 @@ class Modrinth:
         self.game_version = config['game_version']
         self.modloader = config['modloader']
         self.api_endpoint = config['api']['modrinth']['api_endpoint']
-        self.cache = Cache(config)
+        self.cache = Cache(config['type'])
         self.crawler = crawler
         self.modfile = ModFile(config)
 

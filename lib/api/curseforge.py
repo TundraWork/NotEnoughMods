@@ -21,7 +21,7 @@ class CurseForge:
         self.cdn_endpoint = config['api']['curseforge']['cdn_endpoint']
         self.api_key = config['api']['curseforge']['api_key']
         self.user_agent = config['api']['curseforge']['user_agent']
-        self.cache = Cache(config)
+        self.cache = Cache(config['type'])
         self.crawler = crawler
         self.modfile = ModFile(config)
 
@@ -126,11 +126,11 @@ class CurseForge:
             upgrade = True
             if file_id <= cache['curseforge'][slug]['file_id']:
                 print(f'Mod {slug} is already up to date.')
-                return True, 0, file_info[2]
+                return True, 0, mod_id, file_info[2]
         url = self.get_file_url(file_id, file_name)
-        if not url:
-            print('(!) Failed to get file url.')
-            return False, 'Failed to get file url.'
+        # if not url:
+        #     print('(!) Failed to get file url.')
+        #     return False, 'Failed to get file url.'
         self.modfile.download(url, 'curseforge', mod_id, file_id, slug)
         if upgrade:
             self.modfile.delete('curseforge', mod_id, cache['curseforge'][slug]['file_id'], slug)
@@ -138,6 +138,6 @@ class CurseForge:
         self.cache.write(cache)
         print(f'Successfully updated {slug} from CurseForge!')
         if not upgrade:
-            return True, 1, file_info[2]
+            return True, 1, mod_id, file_info[2]
         else:
-            return True, 2, file_info[2]
+            return True, 2, mod_id, file_info[2]

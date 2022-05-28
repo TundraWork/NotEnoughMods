@@ -14,7 +14,6 @@ def main(conf):
     crawler = Crawler(conf)  # hold crawler instance to avoid repeatedly open and close chrome
     curseforge = CurseForge(conf, crawler)
     modrinth = Modrinth(conf, crawler)
-    cache = Cache(conf).read()
     failed = []
     new_mods = []
     upgraded = []
@@ -25,17 +24,16 @@ def main(conf):
         if mod[0] == 'curseforge':
             result = curseforge.download_from_url(mod[1])
             slug = mod[1].split('/')[-1]
-            if slug in cache['curseforge']:
-                curseforge_mods.append(cache['curseforge'][slug]['mod_id'])
             if result[0] is not True:
                 failed.append((mod[1], result[1]))
             else:
+                curseforge_mods.append(result[2])
                 if result[1] == 1:
                     new_mods.append(mod[1])
                 elif result[1] == 2:
                     upgraded.append(mod[1])
-                if result[2]:
-                    dependency_list[slug] = result[2]
+                if result[3]:
+                    dependency_list[slug] = result[3]
 
         elif mod[0] == 'modrinth':
             result = modrinth.download_from_url(mod[1])
