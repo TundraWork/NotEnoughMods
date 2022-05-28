@@ -1,7 +1,6 @@
 import requests
 
 from lib.adapter.cache import Cache
-from lib.adapter.config import Config
 from lib.adapter.modfile import ModFile
 
 
@@ -15,17 +14,16 @@ class CurseForge:
     crawler = None
     modfile = None
 
-    def __init__(self, crawler):
-        config = Config().read()
+    def __init__(self, config, crawler):
         self.game_version = config['game_version']
         self.modloader = config['modloader']
         self.api_endpoint = config['api']['curseforge']['api_endpoint']
         self.cdn_endpoint = config['api']['curseforge']['cdn_endpoint']
         self.api_key = config['api']['curseforge']['api_key']
         self.user_agent = config['api']['curseforge']['user_agent']
-        self.cache = Cache()
+        self.cache = Cache(config)
         self.crawler = crawler
-        self.modfile = ModFile()
+        self.modfile = ModFile(config)
 
     def api_request(self, path, override_api_endpoint=False):
         if not override_api_endpoint:

@@ -1,22 +1,20 @@
 import yaml
 
-from lib.adapter.config import Config
-
 
 class ModList:
     modlist_path = None
-    config = None
+    type = None
 
-    def __init__(self):
-        self.config = Config().read()
-        self.modlist_path = self.config['modlist_path']
+    def __init__(self, config):
+        self.type = config['type']
+        self.modlist_path = config['modlist_path']
 
     def read(self):
         try:
             mods = []
             with open(self.modlist_path, 'r') as modlist_file:
                 modlist = yaml.safe_load(modlist_file)
-                target_mod_list = modlist['both'] + modlist[self.config['type']]
+                target_mod_list = modlist['both'] + modlist[self.type]
                 for line in target_mod_list:
                     if 'curseforge.com' in line:
                         mods.append(('curseforge', line))

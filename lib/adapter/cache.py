@@ -1,7 +1,5 @@
 import json
 
-from lib.adapter.config import Config
-
 
 class Cache:
     cache = {
@@ -10,8 +8,8 @@ class Cache:
     }
     type = None
 
-    def __init__(self):
-        self.type = Config().read()['type']
+    def __init__(self, config):
+        self.type = config['type']
         with open(f'conf/cache.{self.type}.json', 'a+') as cache_file:
             cache_file.seek(0)
             try:

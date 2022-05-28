@@ -2,14 +2,11 @@ import os
 
 import requests
 
-from lib.adapter.config import Config
-
 
 class ModFile:
     mods_path = None
 
-    def __init__(self):
-        config = Config().read()
+    def __init__(self, config):
         self.mods_path = config['mods_path']
 
     def download(self, url, platform, mod_id, file_id, slug):

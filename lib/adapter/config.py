@@ -4,15 +4,16 @@ import yaml
 class Config:
     config = {}
 
-    def __init__(self):
+    def __init__(self, _type):
         with open('conf/main.yaml', 'r') as f:
             self.config = yaml.safe_load(f)
-        if self.config['type'] not in ['client', 'server']:
+        self.config['type'] = _type
+        if _type not in ['client', 'server']:
             print('Invalid type in main.yaml, must be client or server')
             exit(1)
-        elif self.config['type'] == 'client':
+        elif _type == 'client':
             self.config['mods_path'] = self.config['client_mods_path']
-        elif self.config['type'] == 'server':
+        elif _type == 'server':
             self.config['mods_path'] = self.config['server_mods_path']
 
     def read(self):
