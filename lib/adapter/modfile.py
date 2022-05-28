@@ -1,4 +1,7 @@
-import os, requests
+import os
+
+import requests
+
 from lib.adapter.config import Config
 
 

@@ -1,9 +1,8 @@
 from lib.adapter.cache import Cache
 from lib.adapter.modlist import ModList
-from lib.util.crawler import Crawler
 from lib.api.curseforge import CurseForge
 from lib.api.modrinth import Modrinth
-
+from lib.util.crawler import Crawler
 
 modlist = ModList()
 mods = modlist.read()

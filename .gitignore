@@ -1,5 +1,6 @@
 conf/main.yaml
-conf/cache.json
+conf/cache.client.json
+conf/cache.server.json
 Pipfile.lock
 __pycache__
 

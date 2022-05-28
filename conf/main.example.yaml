@@ -1,6 +1,7 @@
 game_version:
   - '1.18.1'
   - '1.18'
+type: client # server or client
 modloader: Fabric
 modlist_path: D:\Games\Minecraft\.minecraft\mods.txt
 mods_path: D:\Games\Minecraft\.minecraft\mods

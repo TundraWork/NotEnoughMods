@@ -1,5 +1,6 @@
 import json
-import os
+
+from lib.adapter.config import Config
 
 
 class Cache:
@@ -7,9 +8,11 @@ class Cache:
         'curseforge': {},
         'modrinth': {}
     }
+    type = None
 
     def __init__(self):
-        with open('conf/cache.json', 'a+') as cache_file:
+        self.type = Config().read()['type']
+        with open(f'conf/cache.{self.type}.json', 'a+') as cache_file:
             cache_file.seek(0)
             try:
                 self.cache = json.load(cache_file)
@@ -21,5 +24,5 @@ class Cache:
 
     def write(self, data):
         self.cache = data
-        with open('conf/cache.json', 'w+') as cache_file:
+        with open(f'conf/cache.{self.type}.json', 'w+') as cache_file:
             json.dump(data, cache_file)

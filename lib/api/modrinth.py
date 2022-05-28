@@ -1,6 +1,10 @@
-import os, requests, urllib, datetime
-from lib.adapter.config import Config
+import datetime
+import urllib
+
+import requests
+
 from lib.adapter.cache import Cache
+from lib.adapter.config import Config
 from lib.adapter.modfile import ModFile
 
 
@@ -36,7 +40,7 @@ class Modrinth:
         url = 'mod?query={}&filters={}&versions={}'.format(
             slug,
             urllib.parse.quote(f'categories="{self.modloader}"'),
-            urllib.parse.quote('version="'+'" OR version="'.join(self.game_version)+'"')
+            urllib.parse.quote('version="' + '" OR version="'.join(self.game_version) + '"')
         )
         data = self.api_request(url)
         if data is None:
@@ -52,7 +56,7 @@ class Modrinth:
             f'https://modrinth.com/mod/{slug}',
             self.crawler.selectors.XPATH,
             '//*[@id="__layout"]/div/main/div[3]/div/section/div[1]/div[8]/div/p'
-            )
+        )
         return mod_id
 
     def get_version(self, mod_id):
@@ -72,7 +76,7 @@ class Modrinth:
             return False
         latest_version = filtered[0]
         for version in filtered:
-            if datetime.datetime.strptime(version['date_published'], '%Y-%m-%dT%H:%M:%S%z')\
+            if datetime.datetime.strptime(version['date_published'], '%Y-%m-%dT%H:%M:%S%z') \
                     > datetime.datetime.strptime(latest_version['date_published'], '%Y-%m-%dT%H:%M:%S%z'):
                 latest_version = version
         return latest_version['id'], latest_version['files'][0]['url']

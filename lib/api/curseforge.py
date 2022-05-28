@@ -1,6 +1,7 @@
-import os, requests
-from lib.adapter.config import Config
+import requests
+
 from lib.adapter.cache import Cache
+from lib.adapter.config import Config
 from lib.adapter.modfile import ModFile
 
 
@@ -60,7 +61,7 @@ class CurseForge:
             f'https://www.curseforge.com/minecraft/mc-mods/{slug}',
             self.crawler.selectors.XPATH,
             '/html/body/div[1]/main/div[1]/div[2]/section/aside/div[2]/div/div[1]/div[2]/div[1]/span[2]'
-            )
+        )
         return mod_id
 
     def get_file_info(self, mod_id):
