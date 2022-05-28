@@ -4,7 +4,8 @@ game_version:
 type: client # server or client
 modloader: Fabric
 modlist_path: D:\Games\Minecraft\.minecraft\mods.txt
-mods_path: D:\Games\Minecraft\.minecraft\mods
+server_mods_path: D:\Games\MinecraftServer\.minecraft\mods
+client_mods_path: D:\Games\Minecraft\.minecraft\mods
 webdriver_path: C:\Libraries\WebDriver\chromedriver.exe
 api:
   curseforge:
