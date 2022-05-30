@@ -63,14 +63,14 @@ class CurseForge:
         return mod_id
 
     def get_file_info(self, mod_id):
-        url = f'{mod_id}/files'
+        url = f'{mod_id}/files?modLoaderType={1 if self.modloader == "Forge" else 4}'
         data = self.api_request(url)
         if data is None:
             return False
         filtered = list()
         for game_version in self.game_version:
             for file in data['data']:
-                if game_version in file['gameVersions'] and self.modloader in file['gameVersions']:
+                if game_version in file['gameVersions']:
                     filtered.append(file)
             if len(filtered) != 0:
                 break
