@@ -14,7 +14,7 @@ class ModList:
             mods = []
             with open(self.modlist_path, 'r') as modlist_file:
                 modlist = yaml.safe_load(modlist_file)
-                target_mod_list = modlist['both'] + modlist[self.type]
+                target_mod_list = modlist['shared'] + modlist[self.type] if modlist[self.type] else modlist['shared']
                 for line in target_mod_list:
                     if 'curseforge.com' in line:
                         mods.append(('curseforge', line))
