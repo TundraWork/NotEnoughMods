@@ -74,8 +74,8 @@ class Modrinth:
             return False
         latest_version = filtered[0]
         for version in filtered:
-            if datetime.datetime.strptime(version['date_published'], '%Y-%m-%dT%H:%M:%S%z') \
-                    > datetime.datetime.strptime(latest_version['date_published'], '%Y-%m-%dT%H:%M:%S%z'):
+            if datetime.datetime.strptime(version['date_published'], '%Y-%m-%dT%H:%M:%S.%fZ') \
+                    > datetime.datetime.strptime(latest_version['date_published'], '%Y-%m-%dT%H:%M:%S.%fZ'):
                 latest_version = version
         return latest_version['id'], latest_version['files'][0]['url']
 
