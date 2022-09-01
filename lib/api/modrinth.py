@@ -53,7 +53,7 @@ class Modrinth:
         mod_id = self.crawler.crawl_webpage(
             f'https://modrinth.com/mod/{slug}',
             self.crawler.selectors.XPATH,
-            '//*[@id="main"]/div/div[2]/div[13]/div[4]/div[2]'
+            '//*[@id="main"]/div/div[2]/div[last()]/div[4]/div[2]'
         )
         return mod_id.strip()
 
@@ -86,7 +86,7 @@ class Modrinth:
             return False, 'Invalid URL for Modrinth mods!'
         slug = url.split('/')[-1]
         cache = self.cache.read()
-        if slug in cache['modrinth']:
+        if slug in cache['modrinth'] and 'mod_id' in cache['modrinth'][slug]:
             mod_id = cache['modrinth'][slug]['mod_id']
         else:
             cache['modrinth'][slug] = {}
