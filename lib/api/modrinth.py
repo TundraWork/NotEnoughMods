@@ -53,9 +53,9 @@ class Modrinth:
         mod_id = self.crawler.crawl_webpage(
             f'https://modrinth.com/mod/{slug}',
             self.crawler.selectors.XPATH,
-            '//*[@id="__layout"]/div/main/div[3]/div/section/div[1]/div[8]/div/p'
+            '//*[@id="main"]/div/div[2]/div[13]/div[4]/div[2]'
         )
-        return mod_id
+        return mod_id.strip()
 
     def get_version(self, mod_id):
         url = f'mod/{mod_id}/version'
