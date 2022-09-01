@@ -99,6 +99,7 @@ class Modrinth:
                     print('Invalid mod slug!')
                     return False, 'Invalid mod slug!'
             cache['modrinth'][slug]['mod_id'] = mod_id
+            self.cache.write(cache)
         version = self.get_version(mod_id)
         upgrade = False
         if 'version_id' in cache['modrinth'][slug]:

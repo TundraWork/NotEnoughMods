@@ -115,6 +115,7 @@ class CurseForge:
                 else:
                     mod_id = int(mod_id)
             cache['curseforge'][slug]['mod_id'] = mod_id
+            self.cache.write(cache)
         file_info = self.get_file_info(mod_id)
         if not file_info:
             print(f'(!) Failed to get file info.')
