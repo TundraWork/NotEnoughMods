@@ -63,10 +63,13 @@ class Modrinth:
         if data is None:
             print(f'(!) Failed to get file id.')
         filtered = list()
+        # TODO: This search loop may need optimization
         for game_version in self.game_version:
             for version in data:
-                if game_version in version['game_versions'] and self.modloader.lower() in version['loaders']:
-                    filtered.append(version)
+                if game_version in version['game_versions']:
+                    for modloader in self.modloader:
+                        if modloader.lower() in version['loaders']:
+                            filtered.append(version)
             if len(filtered) != 0:
                 break
         if len(filtered) == 0:

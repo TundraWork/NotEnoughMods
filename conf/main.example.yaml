@@ -1,7 +1,10 @@
 game_version:
-  - '1.18.1'
-  - '1.18'
-modloader: Fabric
+  - '1.19.2'
+  - '1.19.1'
+  - '1.19'
+modloader:
+  - Quilt
+  - Fabric
 modlist_path: D:\Games\Minecraft\.minecraft\mods.txt
 server_mods_path: D:\Games\MinecraftServer\.minecraft\mods
 client_mods_path: D:\Games\Minecraft\.minecraft\mods

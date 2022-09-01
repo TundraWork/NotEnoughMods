@@ -16,7 +16,8 @@ class CurseForge:
 
     def __init__(self, config, crawler):
         self.game_version = config['game_version']
-        self.modloader = config['modloader']
+        # TODO: This is a hack to only consider first value of modloader
+        self.modloader = config['modloader'][0]
         self.api_endpoint = config['api']['curseforge']['api_endpoint']
         self.cdn_endpoint = config['api']['curseforge']['cdn_endpoint']
         self.api_key = config['api']['curseforge']['api_key']
@@ -63,6 +64,7 @@ class CurseForge:
         return mod_id
 
     def get_file_info(self, mod_id):
+        # TODO: 4 is magic number for Fabric, we need to support Quilt
         url = f'{mod_id}/files?modLoaderType={1 if self.modloader == "Forge" else 4}'
         data = self.api_request(url)
         if data is None:
