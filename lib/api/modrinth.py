@@ -115,5 +115,8 @@ class Modrinth:
             self.modfile.delete('modrinth', mod_id, cache['modrinth'][slug]['version_id'], slug)
         cache['modrinth'][slug]['version_id'] = version[0]
         self.cache.write(cache)
-        print(f'Successfully updated {slug} from Modrinth!')
-        return True, True
+        if upgrade:
+            print(f'Successfully updated {slug} from Modrinth!')
+        else:
+            print(f'Successfully downloaded {slug} from Modrinth!')
+        return True, True, upgrade

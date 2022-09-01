@@ -40,7 +40,10 @@ def main(conf):
             if result[0] is not True:
                 failed.append((mod[1], result[1]))
             elif result[1]:
-                upgraded.append(mod[1])
+                if result[2]:
+                    new_mods.append(mod[1])
+                else:
+                    upgraded.append(mod[1])
         else:
             print('(!) Unsupported mod type: ' + mod[0])
             failed.append((mod[1], 'Unsupported mod type.'))
