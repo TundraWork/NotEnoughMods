@@ -18,7 +18,6 @@ class CurseForge:
         self.game_version = config['game_version']
         # TODO: This is a hack to only consider first value of modloader
         self.modloader = config['modloader'][0]
-        self.modloader_fallback = config['modloader_fallback']
         self.api_endpoint = config['api']['curseforge']['api_endpoint']
         self.cdn_endpoint = config['api']['curseforge']['cdn_endpoint']
         self.api_key = config['api']['curseforge']['api_key']
