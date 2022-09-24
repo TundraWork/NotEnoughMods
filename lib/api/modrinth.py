@@ -104,15 +104,15 @@ class Modrinth:
             cache['modrinth'][slug]['mod_id'] = mod_id
             self.cache.write(cache)
         version = self.get_version(mod_id)
+        if not version:
+            print('(!) Failed to get file url.')
+            return False, 'Failed to get file url.'
         upgrade = False
         if 'version_id' in cache['modrinth'][slug]:
             upgrade = True
             if version[0] == cache['modrinth'][slug]['version_id']:
                 print(f'Mod {slug} is already up to date.')
                 return True, False
-        if not version:
-            print('(!) Failed to get file url.')
-            return False, 'Failed to get file url.'
         self.modfile.download(version[1], 'modrinth', mod_id, version[0], slug)
         if upgrade:
             self.modfile.delete('modrinth', mod_id, cache['modrinth'][slug]['version_id'], slug)

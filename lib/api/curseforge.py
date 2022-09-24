@@ -18,6 +18,7 @@ class CurseForge:
         self.game_version = config['game_version']
         # TODO: This is a hack to only consider first value of modloader
         self.modloader = config['modloader'][0]
+        self.modloader_fallback = config['modloader_fallback']
         self.api_endpoint = config['api']['curseforge']['api_endpoint']
         self.cdn_endpoint = config['api']['curseforge']['cdn_endpoint']
         self.api_key = config['api']['curseforge']['api_key']
@@ -65,7 +66,7 @@ class CurseForge:
 
     def get_file_info(self, mod_id):
         # TODO: 4 is magic number for Fabric, we need to support Quilt
-        url = f'{mod_id}/files?modLoaderType={1 if self.modloader == "Forge" else 4}'
+        url = f'{mod_id}/files?pageSize=9999&modLoaderType={1 if self.modloader == "Forge" else 4}'
         data = self.api_request(url)
         if data is None:
             return False
@@ -131,9 +132,9 @@ class CurseForge:
                 print(f'Mod {slug} is already up to date.')
                 return True, 0, mod_id, file_info[2]
         url = self.get_file_url(file_id, file_name)
-        # if not url:
-        #     print('(!) Failed to get file url.')
-        #     return False, 'Failed to get file url.'
+        if not url:
+            print('(!) Failed to get file url.')
+            return False, 'Failed to get file url.'
         self.modfile.download(url, 'curseforge', mod_id, file_id, slug)
         if upgrade:
             self.modfile.delete('curseforge', mod_id, cache['curseforge'][slug]['file_id'], slug)
